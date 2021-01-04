@@ -29,5 +29,11 @@ namespace webpageTest.Models
         {
             return new ApplicationDbContext();
         }
+
+        public DbSet<Excercise> Excercises { get; set; }
+        public DbSet<ExcerciseType> ExcerciseTypes { get; set; }
+        public DbSet<Ingredient> Ingredients { get; set; }
+        public DbSet<IngredientMeal> IngredientsMeals { get; set; }
+        public DbSet<Meal> Meals { get; set; }
     }
 }
