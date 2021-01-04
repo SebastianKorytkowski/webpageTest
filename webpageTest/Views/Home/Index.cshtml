@@ -2,3 +2,12 @@
     ViewBag.Title = "Home Page";
 }
 
+@if (this.User.Identity.IsAuthenticated)//Only show for logged in users
+{
+    <h1>Welcome, @User.Identity.Name !</h1>
+}
+else
+{
+    <h1>Welcome to my amazing webpage! Create an account now!</h1>
+}
+

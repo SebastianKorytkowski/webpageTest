@@ -18,11 +18,20 @@
                     <span class="icon-bar"></span>
                 </button>
                 @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
                 </ul>
+
+                @if (this.User.Identity.IsAuthenticated)//Only show for logged in users
+                {
+                    <ul class="nav navbar-nav">
+                        <li>@Html.ActionLink("Posiłki", "Index", "Meals")</li>
+                    </ul>
+                }
+
                 @Html.Partial("_LoginPartial")
             </div>
         </div>

@@ -1,6 +1,9 @@
 ﻿using System.Data.Entity;
+using System.Linq;
 using System.Security.Claims;
+using System.Security.Principal;
 using System.Threading.Tasks;
+using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 
@@ -28,6 +31,14 @@ namespace webpageTest.Models
         public static ApplicationDbContext Create()
         {
             return new ApplicationDbContext();
+        }
+
+        public ApplicationUser GetCurrentApplicationUser(IIdentity user)
+        {
+            if (!user.IsAuthenticated) return null;
+
+            string currentUserId = user.GetUserId();
+            return Users.FirstOrDefault(x => x.Id == currentUserId);
         }
 
         public DbSet<Excercise> Excercises { get; set; }
