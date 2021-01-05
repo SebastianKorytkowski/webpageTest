@@ -9,5 +9,7 @@
         public Ingredient Ingredient { get; set; }
 
         public float Quantity { get; set; }
+
+        public float Calories => Ingredient.CalPerGram * Quantity / 100.0f;
     }
 }

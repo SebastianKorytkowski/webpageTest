@@ -32,7 +32,6 @@ namespace webpageTest.Controllers
         // GET: Meals/Details/5
         public ActionResult Details(int? id)
         {
-
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -66,12 +65,105 @@ namespace webpageTest.Controllers
                     meal.ApplicationUser = currentApplicationUser;
                     db.Meals.Add(meal);
                     db.SaveChanges();
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Edit", meal);
                 }
                 return View();
             }
 
             return View(meal);
+        }
+
+
+
+        [HttpGet]
+        public ActionResult CreateIngredient(int?id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Meal meal = db.Meals.Find(id);
+            if (meal == null)
+            {
+                return HttpNotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                db.IngredientsMeals.Add(new IngredientMeal{Meal = meal, Quantity = 100.0f, Ingredient = db.Ingredients.First()});
+                db.SaveChanges();
+            }
+
+            return RedirectToAction("Edit", meal);
+        }
+
+        [HttpGet]
+        public ActionResult DeleteIngredient(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            IngredientMeal ingredientMeal = db.IngredientsMeals.Find(id);
+            if (ingredientMeal == null)
+            {
+                return HttpNotFound();
+            }
+
+            db.Entry(ingredientMeal).Reference(m => m.Meal).Load();
+            Meal meal = ingredientMeal.Meal;
+
+            db.IngredientsMeals.Remove(ingredientMeal);
+            db.SaveChanges();
+
+            return RedirectToAction("Edit", meal);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditIngredient(FormCollection fc)
+        {
+            if (Int32.TryParse(fc["item.Id"], out int id))
+            {
+                IngredientMeal ingredientMeal = db.IngredientsMeals.Find(id);
+                if (ingredientMeal == null) return HttpNotFound();
+
+                if (float.TryParse(fc["item.Quantity"], out float quantity)&& int.TryParse(fc["item.Ingredient"], out int ingredientId))
+                {
+                    Ingredient ingredient = db.Ingredients.Find(ingredientId);
+                    if (ingredient == null) return HttpNotFound();
+
+                    ingredientMeal.Quantity = quantity;
+                    ingredientMeal.Ingredient = ingredient;
+                    db.SaveChanges();
+
+                    db.Entry(ingredientMeal).Reference(m=>m.Meal).Load();
+                    return RedirectToAction("Edit", ingredientMeal.Meal);
+                }
+            }
+
+            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        }
+
+
+        MealViewModel CreateMealViewModel(Meal meal)
+        {
+            var mealIngredients = from m in db.Meals
+                join im in db.IngredientsMeals 
+                    on m.Id equals im.Meal.Id
+                    where m.Id == meal.Id
+                select im;
+
+
+            var selectList = db.Ingredients.ToList().Select(x =>
+                    new SelectListItem
+                    {
+                        Value = x.Id.ToString(),
+                        Text = x.Name
+                    });
+
+
+            return new MealViewModel{Meal = meal, AllIngridientsSelectList = selectList, MealIngredients = mealIngredients.ToList()};
         }
 
         // GET: Meals/Edit/5
@@ -86,7 +178,7 @@ namespace webpageTest.Controllers
             {
                 return HttpNotFound();
             }
-            return View(meal);
+            return View(CreateMealViewModel(meal));
         }
 
         // POST: Meals/Edit/5
@@ -94,15 +186,15 @@ namespace webpageTest.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Date")] Meal meal)
+        public ActionResult Edit(MealViewModel mealViewModel)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(meal).State = EntityState.Modified;
+                db.Entry(mealViewModel.Meal).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(meal);
+            return View(CreateMealViewModel(mealViewModel.Meal));
         }
 
         // GET: Meals/Delete/5
