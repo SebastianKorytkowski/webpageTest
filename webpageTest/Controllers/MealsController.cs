@@ -29,21 +29,6 @@ namespace webpageTest.Controllers
             return View(meals.ToList());
         }
 
-        // GET: Meals/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Meal meal = db.Meals.Find(id);
-            if (meal == null)
-            {
-                return HttpNotFound();
-            }
-            return View(meal);
-        }
-
         // GET: Meals/Create
         public ActionResult Create()
         {
@@ -217,10 +202,25 @@ namespace webpageTest.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Meal meal = db.Meals.Find(id);
-            db.Meals.Remove(meal);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            using (var dbContextTransaction = db.Database.BeginTransaction())
+            {
+                var mealIngredients = from m in db.Meals
+                    join im in db.IngredientsMeals
+                        on m.Id equals im.Meal.Id
+                    where m.Id == id
+                    select im;
+
+                foreach (var ingredient in mealIngredients)
+                    db.IngredientsMeals.Remove(ingredient);
+
+                Meal meal = db.Meals.Find(id);
+                db.Meals.Remove(meal);
+                db.SaveChanges();
+                
+
+                dbContextTransaction.Commit();
+                return RedirectToAction("Index");
+            }
         }
 
         protected override void Dispose(bool disposing)

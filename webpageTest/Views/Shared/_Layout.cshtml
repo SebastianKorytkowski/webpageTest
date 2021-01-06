@@ -29,7 +29,10 @@
                 @if (this.User.Identity.IsAuthenticated)//Only show for logged in users
                 {
                     <ul class="nav navbar-nav">
-                        <li>@Html.ActionLink("Posiłki", "Index", "Meals")</li>
+                        <li>@Html.ActionLink("Excercices", "Index", "Excercises")</li>
+                    </ul>
+                    <ul class="nav navbar-nav">
+                        <li>@Html.ActionLink("Meals", "Index", "Meals")</li>
                     </ul>
                 }
 

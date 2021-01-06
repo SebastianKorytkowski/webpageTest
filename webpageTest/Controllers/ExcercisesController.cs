@@ -6,112 +6,118 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
 using webpageTest.Models;
 
 namespace webpageTest.Controllers
 {
     [Authorize]
-    public class IngredientMealsController : Controller
+    public class ExcercisesController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: IngredientMeals
+        // GET: Excercises
         public ActionResult Index()
         {
-            return View(db.IngredientsMeals.ToList());
+            string userId = User.Identity.GetUserId();
+            var excercises = from e in db.Excercises
+                join u in db.Users
+                    on e.ApplicationUser equals u
+                where u.Id == userId
+                select e;
+
+            return View(excercises.ToList());
         }
 
-        // GET: IngredientMeals/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            IngredientMeal ingredientMeal = db.IngredientsMeals.Find(id);
-            if (ingredientMeal == null)
-            {
-                return HttpNotFound();
-            }
-            return View(ingredientMeal);
-        }
-
-        // GET: IngredientMeals/Create
+        // GET: Excercises/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: IngredientMeals/Create
+        // POST: Excercises/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Quantity")] IngredientMeal ingredientMeal)
+        public ActionResult Create([Bind(Include = "Id,Time")] Excercise excercise)
         {
             if (ModelState.IsValid)
             {
-                db.IngredientsMeals.Add(ingredientMeal);
+                excercise.ApplicationUser = db.GetCurrentApplicationUser(User.Identity);
+                db.Excercises.Add(excercise);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            return View(ingredientMeal);
+            return View("Edit", CreateExcerciseViewModel(excercise));
         }
 
-        // GET: IngredientMeals/Edit/5
+        ExcerciseViewModel CreateExcerciseViewModel(Excercise excercise)
+        {
+            var selectList = db.ExcerciseTypes.ToList().Select(x =>
+                new SelectListItem
+                {
+                    Value = x.Id.ToString(),
+                    Text = x.Name
+                });
+
+            return new ExcerciseViewModel { Excercise = excercise, AllExcerciseTypeSelectList = selectList};
+        }
+
+        // GET: Excercises/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            IngredientMeal ingredientMeal = db.IngredientsMeals.Find(id);
-            if (ingredientMeal == null)
+            Excercise excercise = db.Excercises.Find(id);
+            if (excercise == null)
             {
                 return HttpNotFound();
             }
-            return View(ingredientMeal);
+            return View(CreateExcerciseViewModel(excercise));
         }
 
-        // POST: IngredientMeals/Edit/5
+        // POST: Excercises/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Quantity")] IngredientMeal ingredientMeal)
+        public ActionResult Edit([Bind(Include = "Id,Time")] Excercise excercise)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(ingredientMeal).State = EntityState.Modified;
+                db.Entry(excercise).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(ingredientMeal);
+            return View(CreateExcerciseViewModel(excercise));
         }
 
-        // GET: IngredientMeals/Delete/5
+        // GET: Excercises/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            IngredientMeal ingredientMeal = db.IngredientsMeals.Find(id);
-            if (ingredientMeal == null)
+            Excercise excercise = db.Excercises.Find(id);
+            if (excercise == null)
             {
                 return HttpNotFound();
             }
-            return View(ingredientMeal);
+            return View(excercise);
         }
 
-        // POST: IngredientMeals/Delete/5
+        // POST: Excercises/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            IngredientMeal ingredientMeal = db.IngredientsMeals.Find(id);
-            db.IngredientsMeals.Remove(ingredientMeal);
+            Excercise excercise = db.Excercises.Find(id);
+            db.Excercises.Remove(excercise);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

@@ -15,7 +15,8 @@ namespace webpageTest
                         "~/Scripts/jquery.validate*"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryui").Include(
-                "~/Scripts/jquery-ui-{version}.js"));
+                "~/Scripts/jquery-ui-{version}.js",
+                         "~/Scripts/jquery.datetimepicker.js"));
 
             bundles.Add(new StyleBundle("~/Content/themes/base/css").Include(
                 "~/Content/themes/base/accordion.css",
@@ -37,7 +38,8 @@ namespace webpageTest
                 "~/Content/themes/base/spinner.css",
                 "~/Content/themes/base/tabs.css",
                 "~/Content/themes/base/theme.css",
-                "~/Content/themes/base/tooltip.css"));
+                "~/Content/themes/base/tooltip.css",
+                "~/Content/jquery.datetimepicker.css"));
 
             // Use the development version of Modernizr to develop with and learn from. Then, when you're
             // ready for production, use the build tool at https://modernizr.com to pick only the tests you need.
