@@ -40,17 +40,19 @@ namespace webpageTest.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Time")] Excercise excercise)
+        public ActionResult Create([Bind(Include = "Id,Date")] Excercise excercise)
         {
             if (ModelState.IsValid)
             {
                 excercise.ApplicationUser = db.GetCurrentApplicationUser(User.Identity);
+                excercise.ExType = db.ExcerciseTypes.First();
                 db.Excercises.Add(excercise);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+
+                return View("Edit", CreateExcerciseViewModel(excercise));
             }
 
-            return View("Edit", CreateExcerciseViewModel(excercise));
+            return RedirectToAction("Index");
         }
 
         ExcerciseViewModel CreateExcerciseViewModel(Excercise excercise)
@@ -61,6 +63,9 @@ namespace webpageTest.Controllers
                     Value = x.Id.ToString(),
                     Text = x.Name
                 });
+
+            //Make sure the coresponding execisetype is loaded
+            db.Entry(excercise).Reference(e => e.ExType).Load();
 
             return new ExcerciseViewModel { Excercise = excercise, AllExcerciseTypeSelectList = selectList};
         }
@@ -85,15 +90,48 @@ namespace webpageTest.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Time")] Excercise excercise)
+        public ActionResult Edit([Bind(Include = "Id,Date,Length,ExType")] Excercise excercise)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(excercise).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                ExcerciseType excerciseType = db.ExcerciseTypes.Find(excercise.ExType.Id);
+                if (excerciseType != null)
+                {
+                    db.Excercises.Attach(excercise);
+
+                    excercise.ExType = excerciseType;
+                    db.Entry(excercise).State = EntityState.Modified;
+                    db.SaveChanges();
+                }
             }
+
             return View(CreateExcerciseViewModel(excercise));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditIngredient(FormCollection fc)
+        {
+            if (Int32.TryParse(fc["item.Id"], out int id))
+            {
+                IngredientMeal ingredientMeal = db.IngredientsMeals.Find(id);
+                if (ingredientMeal == null) return HttpNotFound();
+
+                if (float.TryParse(fc["item.Quantity"], out float quantity) && int.TryParse(fc["item.Ingredient"], out int ingredientId))
+                {
+                    Ingredient ingredient = db.Ingredients.Find(ingredientId);
+                    if (ingredient == null) return HttpNotFound();
+
+                    ingredientMeal.Quantity = quantity;
+                    ingredientMeal.Ingredient = ingredient;
+                    db.SaveChanges();
+
+                    db.Entry(ingredientMeal).Reference(m => m.Meal).Load();
+                    return RedirectToAction("Edit", ingredientMeal.Meal);
+                }
+            }
+
+            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
         }
 
         // GET: Excercises/Delete/5

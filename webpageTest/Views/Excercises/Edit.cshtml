@@ -18,10 +18,26 @@
         @Html.HiddenFor(model => model.Excercise.Id)
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Excercise.Time, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.Excercise.Date, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Excercise.Time, new { htmlAttributes = new { @class = "form-control date-picker", autocomplete = "off" } })
-                @Html.ValidationMessageFor(model => model.Excercise.Time, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.Excercise.Date, new { htmlAttributes = new { @class = "form-control date-picker", autocomplete = "off" } })
+                @Html.ValidationMessageFor(model => model.Excercise.Date, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Excercise.Length, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Excercise.Length, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+                @Html.ValidationMessageFor(model => model.Excercise.Length, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Excercise.ExType, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.Excercise.ExType.Id, new SelectList(Model.AllExcerciseTypeSelectList, "Value", "Text", Model.Excercise.ExType.Id.ToString()))
+
             </div>
         </div>
 
@@ -46,11 +62,12 @@
     @Styles.Render("~/Content/themes/base/css")
     <script type="text/javascript">
         $(function () {
+            var d = new Date();
             $(".date-picker").datetimepicker(
                 {
-                    dateFormat: "dd/mm/yy H:i",
+                    defaultDate: d,
+                    defaultTime: d.getHours() + ":" + d.getMinutes(),
                     maxDate: "+0D",
-                    inline: true
                 }
             );
         });

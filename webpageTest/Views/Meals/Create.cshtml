@@ -43,11 +43,12 @@
     @Styles.Render("~/Content/themes/base/css")
     <script type="text/javascript">
         $(function () {
+            var d = new Date();
             $(".date-picker").datetimepicker(
                 {
-                    dateFormat: "dd/mm/yy H:i",
+                    defaultDate: d,
+                    defaultTime: d.getHours() + ":" + d.getMinutes(),
                     maxDate: "+0D",
-                    inline: true
                 }
             );
         });

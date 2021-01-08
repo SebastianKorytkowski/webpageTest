@@ -20,7 +20,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Meal.Date, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Meal.Date, new { htmlAttributes = new { @class = "form-control date-picker" } })
+                @Html.EditorFor(model => model.Meal.Date, new { htmlAttributes = new { @class = "form-control date-picker", autocomplete = "off" } })
                 @Html.ValidationMessageFor(model => model.Meal.Date, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -92,11 +92,12 @@
     @Styles.Render("~/Content/themes/base/css")
     <script type="text/javascript">
         $(function () {
+            var d = new Date();
             $(".date-picker").datetimepicker(
                 {
-                    dateFormat: "dd/mm/yy H:i",
+                    defaultDate: d,
+                    defaultTime: d.getHours() + ":" + d.getMinutes(),
                     maxDate: "+0D",
-                    inline: true
                 }
             );
         });

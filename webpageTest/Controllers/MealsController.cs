@@ -55,7 +55,7 @@ namespace webpageTest.Controllers
                 return View();
             }
 
-            return View(meal);
+            return View();
         }
 
 
@@ -94,6 +94,7 @@ namespace webpageTest.Controllers
             {
                 return HttpNotFound();
             }
+
 
             db.Entry(ingredientMeal).Reference(m => m.Meal).Load();
             Meal meal = ingredientMeal.Meal;
