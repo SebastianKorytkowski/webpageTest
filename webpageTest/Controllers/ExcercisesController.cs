@@ -49,7 +49,7 @@ namespace webpageTest.Controllers
                 db.Excercises.Add(excercise);
                 db.SaveChanges();
 
-                return View("Edit", CreateExcerciseViewModel(excercise));
+                return RedirectToAction("Edit", excercise);
             }
 
             return RedirectToAction("Index");
@@ -90,22 +90,28 @@ namespace webpageTest.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Date,Length,ExType")] Excercise excercise)
+        public ActionResult Edit(FormCollection fc)
         {
-            if (ModelState.IsValid)
+            if (Int32.TryParse(fc["Excercise.Id"], out int id))
             {
-                ExcerciseType excerciseType = db.ExcerciseTypes.Find(excercise.ExType.Id);
-                if (excerciseType != null)
+                Excercise excercise = db.Excercises.Find(id);
+                if (excercise == null) return HttpNotFound();
+                if (float.TryParse(fc["Excercise.Length"], out float length) && int.TryParse(fc["Excercise.ExType.Id"], out int excerciseTypeId) && DateTime.TryParse(fc["Excercise.Date"], out DateTime date))
                 {
-                    db.Excercises.Attach(excercise);
-
+                    ExcerciseType excerciseType = db.ExcerciseTypes.Find(excerciseTypeId);
+                    if (excerciseType == null) return HttpNotFound();
                     excercise.ExType = excerciseType;
-                    db.Entry(excercise).State = EntityState.Modified;
+                    excercise.Length = length;
+                    excercise.Date = date;
                     db.SaveChanges();
+
+                    db.Entry(excercise).Reference(m => m.ExType).Load();
+                    return RedirectToAction("Edit", excercise);
                 }
             }
 
-            return View(CreateExcerciseViewModel(excercise));
+
+            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
         }
 
         [HttpPost]
