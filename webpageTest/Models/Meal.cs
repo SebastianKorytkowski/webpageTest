@@ -20,6 +20,6 @@ namespace webpageTest.Models
 
         public float Calories => IngredientMeals==null?0:IngredientMeals.Aggregate(0.0f, (a, b) => a + b.Calories);
         
-        public string Summary => (IngredientMeals==null|| IngredientMeals.Count==0) ? "Empty meal" :$"{string.Join(",", IngredientMeals.Select(t=>t.Ingredient.Name + $"({t.Quantity}g)"))}; eaten  {Calories} KCal";
+        public string Summary => (IngredientMeals==null|| IngredientMeals.Count==0) ? "Empty meal" :$"{string.Join(", ", IngredientMeals.Select(t=>t.Ingredient.Name + $"({t.Quantity}g)"))}; eaten  {Calories} KCal";
     }
 }

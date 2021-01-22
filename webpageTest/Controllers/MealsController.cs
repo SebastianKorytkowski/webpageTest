@@ -119,6 +119,8 @@ namespace webpageTest.Controllers
                     db.Entry(ingredientMeal).Reference(m=>m.Meal).Load();
                     return RedirectToAction("Edit", ingredientMeal.Meal);
                 }
+
+                return RedirectToAction("Edit", ingredientMeal.Meal);
             }
 
             return new HttpStatusCodeResult(HttpStatusCode.BadRequest);

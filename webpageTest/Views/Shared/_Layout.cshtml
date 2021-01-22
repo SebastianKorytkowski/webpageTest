@@ -29,6 +29,9 @@
                 @if (this.User.Identity.IsAuthenticated)//Only show for logged in users
                 {
                     <ul class="nav navbar-nav">
+                        <li>@Html.ActionLink("Calendar", "Index", "Calendar", new { start = DateTime.Today }, new {})</li>
+                    </ul>
+                    <ul class="nav navbar-nav">
                         <li>@Html.ActionLink("Excercices", "Index", "Excercises")</li>
                     </ul>
                     <ul class="nav navbar-nav">

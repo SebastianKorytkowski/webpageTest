@@ -1,0 +1,73 @@
+﻿@using System.Web.UI.WebControls
+@model webpageTest.Models.CalendarViewModel
+
+@{
+    ViewBag.Title = "Calendar";
+}
+
+<h2>Calendar</h2>
+
+
+@if (Model.Start < DateTime.Today)
+{
+    var tmp = Model.Start + TimeSpan.FromDays(Model.Days.Count);
+    @Html.ActionLink("Show newer", "Index", "Calendar", new { start = tmp > DateTime.Today ? DateTime.Today : tmp, daysCount = Model.Days.Count }, new { })
+}
+
+
+<table class="table">
+    <tr>
+        <th>
+            Date
+        </th>
+        <th>
+            Exercises
+        </th>
+        <th>
+            Meals
+        </th>
+        <th>
+            Balance
+        </th>
+    </tr>
+
+    @foreach (var item in Model.Days)
+    {
+        var mealsCalories = item.Meals.Aggregate(0.0f, (f, meal) => f + meal.Calories);
+        var exerciseCalories = item.Exercises.Aggregate(0.0f, (f, exercise) => f + exercise.Calories);
+        var sum = (int)(mealsCalories - exerciseCalories);
+
+        <tr>
+            <td>
+                @item.Date.ToString("yyyy/MM/dd")
+            </td>
+            <td>
+                <span style="white-space: pre-line">@string.Join("\n", item.Meals.Select(t => t.Summary))</span>
+                @if (item.Meals.Count != 0)
+                {<br />}
+                <b>@mealsCalories.ToString() Kcal</b>
+            </td>
+            <td>
+                <span style="white-space: pre-line">@string.Join("\n", item.Exercises.Select(t => t.Summary)) </span>
+                @if (item.Exercises.Count != 0)
+                {<br />}
+                <b>@exerciseCalories.ToString() Kcal</b>
+            </td>
+            <td>
+                <b>@sum.ToString() Kcal</b>
+            </td>
+        </tr>
+    }
+</table>
+
+@Html.ActionLink("Show older", "Index", "Calendar", new { start = Model.Start - TimeSpan.FromDays(Model.Days.Count), daysCount = Model.Days.Count }, new { })
+<br />
+@if (Model.Days.Count < 7 * 4)
+{
+    @Html.ActionLink("Show more", "Index", "Calendar", new { start = Model.Start, daysCount = Model.Days.Count + 7 }, new { })
+}
+<br />
+@if (Model.Days.Count > 7)
+{
+    @Html.ActionLink("Show less", "Index", "Calendar", new { start = Model.Start, daysCount = Model.Days.Count - 7 }, new { })
+}

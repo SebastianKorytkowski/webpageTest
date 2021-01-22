@@ -27,9 +27,14 @@ namespace webpageTest.Controllers
                 var todayMeals = meals.Where(m => DbFunctions.TruncateTime(m.Date) == today).ToList();
                 var todayExercises = exercises.Where(e => DbFunctions.TruncateTime(e.Date) == today).ToList();
 
+                float mealsCalories = todayMeals.Aggregate(0.0f, (f, meal) => f + meal.Calories);
+                float exercisesCalories = todayExercises.Aggregate(0.0f, (f, exercise) => f + exercise.Calories);
+
                 return View(new IndexViewModel
                 {
-                    Info = $"",
+                    Info = $"Eaten: {mealsCalories}\n" +
+                           $"Burned: -{exercisesCalories}\n" +
+                           $"Balance: {mealsCalories-exercisesCalories}",
                     TodayMeals = todayMeals,
                     TodayExercises = todayExercises
                 });
