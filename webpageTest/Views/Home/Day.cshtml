@@ -18,64 +18,77 @@
 <div style="width: 100%;">
     <div style="float: left; width: 50%; margin-right:10px">
         <h2>Exercises</h2>
-
-        <table class="table table-bordered table-striped">
-            <tr>
-                <th>
-                    Time
-                </th>
-                <th>
-                    Summary
-                </th>
-                <th></th>
-            </tr>
-            @foreach (var item in Model.Exercises)
-            {
+        @if (Model.Exercises.Any())
+        {
+            <table class="table table-bordered table-striped">
                 <tr>
-                    <td>
-                        @item.Date.ToString("H:mm")
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Summary)
-                    </td>
-                    <td>
-                        @Html.ActionLink("Edit", "Edit", "Excercises", new { id = item.Id }, new { @class = "btn btn-primary" }) 
-                        @Html.ActionLink("Delete", "Delete", "Excercises", new { id = item.Id }, new { @class = "btn btn-danger" })
-                    </td>
+                    <th>
+                        Time
+                    </th>
+                    <th>
+                        Summary
+                    </th>
+                    <th></th>
                 </tr>
-            }
-        </table>
+                @foreach (var item in Model.Exercises)
+                {
+                    <tr>
+                        <td>
+                            @item.Date.ToString("H:mm")
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Summary)
+                        </td>
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", "Excercises", new {id = item.Id}, new {@class = "btn btn-primary"})
+                            @Html.ActionLink("Delete", "Delete", "Excercises", new {id = item.Id}, new {@class = "btn btn-danger"})
+                        </td>
+                    </tr>
+                }
+            </table>
+        }
+        else
+        {
+            <h2>No exercises found!</h2>
+        }
+
         @Html.ActionLink("Create New Exercise", "Create", "Excercises", new { date = Model.Date.ToString("yyyy/MM/dd HH:mm") }, new { @class = "btn btn-success" })
     </div>
     <div style="float: left;">
         <h2>Meals</h2>
-
-        <table class="table table-bordered table-striped">
-            <tr>
-                <th>
-                    Time
-                </th>
-                <th>
-                    Summary
-                </th>
-                <th></th>
-            </tr>
-            @foreach (var item in Model.Meals)
-            {
+        @if (Model.Meals.Any())
+        {
+            <table class="table table-bordered table-striped">
                 <tr>
-                    <td>
-                        @item.Date.ToString("H:mm")
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Summary)
-                    </td>
-                    <td>
-                        @Html.ActionLink("Edit", "Edit", "Meals", new { id = item.Id }, new { @class = "btn btn-primary"}) 
-                        @Html.ActionLink("Delete", "Delete", "Meals", new { id = item.Id }, new { @class = "btn btn-danger" })
-                    </td>
+                    <th>
+                        Time
+                    </th>
+                    <th>
+                        Summary
+                    </th>
+                    <th></th>
                 </tr>
-            }
-        </table>
+                @foreach (var item in Model.Meals)
+                {
+                    <tr>
+                        <td>
+                            @item.Date.ToString("H:mm")
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Summary)
+                        </td>
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", "Meals", new { id = item.Id }, new { @class = "btn btn-primary"}) 
+                            @Html.ActionLink("Delete", "Delete", "Meals", new { id = item.Id }, new { @class = "btn btn-danger" })
+                        </td>
+                    </tr>
+                }
+            </table>
+        }
+        else
+        {
+            <h2>No meals found!</h2>
+        }
         @Html.ActionLink("Create New Meal", "Create", "Meals", new { date = Model.Date.ToString("yyyy/MM/dd HH:mm") }, new { @class = "btn btn-success" })
     </div>
 </div>
