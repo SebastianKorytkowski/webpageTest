@@ -11,7 +11,7 @@ namespace webpageTest.Models
         [Required, DisplayFormat(DataFormatString = "{0:yyyy/MM/dd HH:mm}", ApplyFormatInEditMode=true)]
         public DateTime Date { get; set; }
 
-        public float Length { get; set; }
+        public float Length { get; set; } = 15.0f;
 
         public virtual ExcerciseType ExType { get; set; }
 

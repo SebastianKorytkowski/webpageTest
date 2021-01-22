@@ -1,0 +1,82 @@
+﻿@model webpageTest.Models.DayViewModel
+
+@{
+    ViewBag.Title = "Day Summary";
+}
+
+<h1>Summary for day @Model.Date.ToString("yyyy/MM/dd")</h1>
+
+@Html.ActionLink("Previous day", "Day", "Home", new { Date = Model.Date.Date - TimeSpan.FromDays(1) }, new { })
+&emsp;
+@if (Model.Date < DateTime.Today)
+{
+    @Html.ActionLink("Next day", "Day", "Home", new { Date = Model.Date.Date + TimeSpan.FromDays(1) }, new { })
+}
+<br/>
+<span style="white-space: pre-line">@Model.Info</span>
+
+<div style="width: 100%;">
+    <div style="float: left; width: 50%">
+        <h2>Exercises</h2>
+
+        <table class="table">
+            <tr>
+                <th>
+                    Time
+                </th>
+                <th>
+                    Summary
+                </th>
+                <th></th>
+            </tr>
+            @foreach (var item in Model.Exercises)
+            {
+                <tr>
+                    <td>
+                        @item.Date.ToString("H:mm")
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Summary)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", "Excercises", new { id = item.Id }, new { }) |
+                        @Html.ActionLink("Delete", "Delete", "Excercises", new { id = item.Id }, new { })
+                    </td>
+                </tr>
+            }
+        </table>
+        @Html.ActionLink("Create New Exercise", "Create", "Excercises", new { date = Model.Date.ToString("yyyy/MM/dd HH:mm") }, new { })
+    </div>
+    <div style="float: left;">
+        <h2>Meals</h2>
+
+        <table class="table">
+            <tr>
+                <th>
+                    Time
+                </th>
+                <th>
+                    Summary
+                </th>
+                <th></th>
+            </tr>
+            @foreach (var item in Model.Meals)
+            {
+                <tr>
+                    <td>
+                        @item.Date.ToString("H:mm")
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Summary)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", "Meals", new { id = item.Id }, new { }) |
+                        @Html.ActionLink("Delete", "Delete", "Meals", new { id = item.Id }, new { })
+                    </td>
+                </tr>
+            }
+        </table>
+        @Html.ActionLink("Create New Meal", "Create", "Meals", new { date = Model.Date.ToString("yyyy/MM/dd HH:mm") }, new { })
+    </div>
+</div>
+<div style="clear:both"></div>

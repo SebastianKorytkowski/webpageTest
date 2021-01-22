@@ -16,7 +16,7 @@ namespace webpageTest.Controllers
         // GET: Calendar
         public ActionResult Index(DateTime?start=null, int daysCount=7)
         {
-            DateTime realStart = start ?? DateTime.Now;
+            DateTime realStart = (start ?? DateTime.Now).Date;
 
             List<Day> days = new List<Day>();
 

@@ -23,9 +23,10 @@ namespace webpageTest.Controllers
         }
 
         // GET: Meals/Create
-        public ActionResult Create()
+        public ActionResult Create(DateTime? date = null)
         {
-            return View();
+            Meal tmp = new Meal { Date = date.GetValueOrDefault(DateTime.Now) };
+            return View(tmp);
         }
 
         // POST: Meals/Create
@@ -120,6 +121,7 @@ namespace webpageTest.Controllers
                     return RedirectToAction("Edit", ingredientMeal.Meal);
                 }
 
+                db.Entry(ingredientMeal).Reference(m => m.Meal).Load();
                 return RedirectToAction("Edit", ingredientMeal.Meal);
             }
 

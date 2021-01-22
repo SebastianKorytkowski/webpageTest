@@ -1,5 +1,4 @@
-﻿@using System.Web.UI.WebControls
-@model webpageTest.Models.CalendarViewModel
+﻿@model webpageTest.Models.CalendarViewModel
 
 @{
     ViewBag.Title = "Calendar";
@@ -21,40 +20,70 @@
             Date
         </th>
         <th>
-            Exercises
+            Meals
         </th>
         <th>
-            Meals
+            Exercises
         </th>
         <th>
             Balance
         </th>
+        <th></th>
     </tr>
+    
+    @{
+        int sumMeals = 0;
+        int sumExercises = 0;
+        foreach (var item in Model.Days)
+        {
+            var mealsCalories = (int)item.Meals.Aggregate(0.0f, (f, meal) => f + meal.Calories);
+            var exerciseCalories = (int)item.Exercises.Aggregate(0.0f, (f, exercise) => f + exercise.Calories);
+            var sum = mealsCalories - exerciseCalories;
+            sumMeals += mealsCalories;
+            sumExercises += exerciseCalories;
 
-    @foreach (var item in Model.Days)
-    {
-        var mealsCalories = item.Meals.Aggregate(0.0f, (f, meal) => f + meal.Calories);
-        var exerciseCalories = item.Exercises.Aggregate(0.0f, (f, exercise) => f + exercise.Calories);
-        var sum = (int)(mealsCalories - exerciseCalories);
+            <tr>
+                <td>
+                    @item.Date.ToString("yyyy/MM/dd")
+                </td>
+                <td>
+                    <span style="white-space: pre-line">@string.Join("\n", item.Meals.Select(t => t.Summary))</span>
+                    @if (item.Meals.Count != 0)
+                    {<br />}
+                    <b>@mealsCalories.ToString() Kcal</b>
+                </td>
+                <td>
+                    <span style="white-space: pre-line">@string.Join("\n", item.Exercises.Select(t => t.Summary)) </span>
+                    @if (item.Exercises.Count != 0)
+                    {<br />}
+                    <b>@exerciseCalories.ToString() Kcal</b>
+                </td>
+                <td>
+                    <b>@sum.ToString() Kcal</b>
+                </td>
+                <td>
+                    @Html.ActionLink("Details", "Day", "Home", new { date = item.Date }, new {})
+                </td>
+            </tr>
 
+        }
+
+        
         <tr>
             <td>
-                @item.Date.ToString("yyyy/MM/dd")
+                Sum
             </td>
             <td>
-                <span style="white-space: pre-line">@string.Join("\n", item.Meals.Select(t => t.Summary))</span>
-                @if (item.Meals.Count != 0)
-                {<br />}
-                <b>@mealsCalories.ToString() Kcal</b>
+                <b>@sumMeals Kcal</b>
             </td>
             <td>
-                <span style="white-space: pre-line">@string.Join("\n", item.Exercises.Select(t => t.Summary)) </span>
-                @if (item.Exercises.Count != 0)
-                {<br />}
-                <b>@exerciseCalories.ToString() Kcal</b>
+                <b>@sumExercises Kcal</b>
             </td>
             <td>
-                <b>@sum.ToString() Kcal</b>
+                <b>@( sumMeals - sumExercises ) Kcal</b>
+            </td>
+            <td>
+                
             </td>
         </tr>
     }

@@ -180,7 +180,7 @@
     <Compile Include="Models\ExcerciseType.cs" />
     <Compile Include="Models\ExcerciseViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
-    <Compile Include="Models\IndexViewModel.cs" />
+    <Compile Include="Models\DayViewModel.cs" />
     <Compile Include="Models\Ingredient.cs" />
     <Compile Include="Models\IngredientMeal.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -284,6 +284,7 @@
     <Content Include="Views\Excercises\Edit.cshtml" />
     <Content Include="Views\Excercises\Index.cshtml" />
     <Content Include="Views\Calendar\Index.cshtml" />
+    <Content Include="Views\Home\Day.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

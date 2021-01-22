@@ -23,9 +23,10 @@ namespace webpageTest.Controllers
         }
 
         // GET: Excercises/Create
-        public ActionResult Create()
+        public ActionResult Create(DateTime?date=null)
         {
-            return View();
+            Excercise tmp = new Excercise {Date = date.GetValueOrDefault(DateTime.Now)};
+            return View(tmp);
         }
 
         // POST: Excercises/Create
