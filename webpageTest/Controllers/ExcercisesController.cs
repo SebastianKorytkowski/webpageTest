@@ -19,14 +19,7 @@ namespace webpageTest.Controllers
         // GET: Excercises
         public ActionResult Index()
         {
-            string userId = User.Identity.GetUserId();
-            var excercises = from e in db.Excercises
-                join u in db.Users
-                    on e.ApplicationUser equals u
-                where u.Id == userId
-                select e;
-
-            return View(excercises.ToList());
+            return View(db.GetUserExercises(User.Identity).ToList());
         }
 
         // GET: Excercises/Create

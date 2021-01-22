@@ -5,10 +5,6 @@ using Microsoft.Owin.Security;
 
 namespace webpageTest.Models
 {
-    public class IndexViewModel
-    {
-        public bool BrowserRemembered { get; set; }
-    }
 
     public class SetPasswordViewModel
     {

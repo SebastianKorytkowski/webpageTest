@@ -60,12 +60,7 @@ namespace webpageTest.Controllers
                 : message == ManageMessageId.Error ? "An error has occurred."
                 : "";
 
-            var userId = User.Identity.GetUserId();
-            var model = new IndexViewModel
-            {
-                BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
-            };
-            return View(model);
+            return View();
         }
 
        

@@ -19,14 +19,7 @@ namespace webpageTest.Controllers
         // GET: Meals
         public ActionResult Index()
         {
-            string userId = User.Identity.GetUserId();
-            var meals = from m in db.Meals
-                        join u in db.Users 
-                        on m.ApplicationUser equals u
-                        where u.Id == userId
-                        select m;
-
-            return View(meals.ToList());
+            return View(db.GetUserMeals(User.Identity).ToList());
         }
 
         // GET: Meals/Create
@@ -134,11 +127,7 @@ namespace webpageTest.Controllers
 
         MealViewModel CreateMealViewModel(Meal meal)
         {
-            var mealIngredients = from m in db.Meals
-                join im in db.IngredientsMeals 
-                    on m.Id equals im.Meal.Id
-                    where m.Id == meal.Id
-                select im;
+            var mealIngredients = db.GetMealIngridients(meal);
 
 
             var selectList = db.Ingredients.ToList().Select(x =>

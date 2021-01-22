@@ -13,8 +13,12 @@ namespace webpageTest.Models
 
         public float Length { get; set; }
 
-        public ExcerciseType ExType { get; set; }
+        public virtual ExcerciseType ExType { get; set; }
 
         public ApplicationUser ApplicationUser { get; set; }
+
+        public float Calories => ExType==null?0.0f:(int)(ExType.CalPerSec/60.0f * Length);
+        
+        public string Summary => ExType==null?"":$"{ExType.Name} for {Length} minutes; burned {Calories} KCal";
     }
 }

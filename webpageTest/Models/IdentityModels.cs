@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
@@ -6,6 +7,7 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using WebGrease.Css.Extensions;
 
 namespace webpageTest.Models
 {
@@ -39,6 +41,44 @@ namespace webpageTest.Models
 
             string currentUserId = user.GetUserId();
             return Users.FirstOrDefault(x => x.Id == currentUserId);
+        }
+
+        public IQueryable<Meal> GetUserMeals(IIdentity user)
+        {
+            string userId = user.GetUserId();
+
+            var meals = from m in Meals
+                join u in Users
+                    on m.ApplicationUser equals u
+                where u.Id == userId
+                        select m;
+
+            return meals;
+        }
+
+        public IQueryable<Excercise> GetUserExercises(IIdentity user)
+        {
+            string userId = user.GetUserId();
+
+            var excercises = from e in Excercises
+                join u in Users
+                    on e.ApplicationUser equals u
+                where u.Id == userId
+                select e;
+
+            return excercises;
+        }
+
+        public IQueryable<IngredientMeal> GetMealIngridients(Meal meal)
+        {
+            if (meal == null) return null;
+
+            var mealIngredients = from m in Meals
+                join im in IngredientsMeals
+                    on m.Id equals im.Meal.Id
+                where m.Id == meal.Id
+                select im;
+            return mealIngredients;
         }
 
         public DbSet<Excercise> Excercises { get; set; }
