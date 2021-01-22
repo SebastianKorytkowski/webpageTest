@@ -10,11 +10,11 @@
 @if (Model.Start < DateTime.Today)
 {
     var tmp = Model.Start + TimeSpan.FromDays(Model.Days.Count);
-    @Html.ActionLink("Show newer", "Index", "Calendar", new { start = tmp > DateTime.Today ? DateTime.Today : tmp, daysCount = Model.Days.Count }, new { })
+    @Html.ActionLink("Show newer", "Index", "Calendar", new { start = tmp > DateTime.Today ? DateTime.Today : tmp, daysCount = Model.Days.Count }, new { @class = "btn btn-primary", @style="margin-bottom:3px;" })
 }
 
 
-<table class="table">
+<table class="table table-bordered table-striped">
     <tr>
         <th>
             Date
@@ -61,8 +61,8 @@
                 <td>
                     <b>@sum.ToString() Kcal</b>
                 </td>
-                <td>
-                    @Html.ActionLink("Details", "Day", "Home", new { date = item.Date }, new {})
+                <td align="center">
+                    @Html.ActionLink("Details", "Day", "Home", new { date = item.Date }, new { @class = "btn btn-primary"})
                 </td>
             </tr>
 
@@ -89,14 +89,14 @@
     }
 </table>
 
-@Html.ActionLink("Show older", "Index", "Calendar", new { start = Model.Start - TimeSpan.FromDays(Model.Days.Count), daysCount = Model.Days.Count }, new { })
+@Html.ActionLink("Show older", "Index", "Calendar", new { start = Model.Start - TimeSpan.FromDays(Model.Days.Count), daysCount = Model.Days.Count }, new { @class = "btn btn-primary", @style = "margin-bottom:3px;" })
 <br />
 @if (Model.Days.Count < 7 * 4)
 {
-    @Html.ActionLink("Show more", "Index", "Calendar", new { start = Model.Start, daysCount = Model.Days.Count + 7 }, new { })
+    @Html.ActionLink("Show more", "Index", "Calendar", new { start = Model.Start, daysCount = Model.Days.Count + 7 }, new { @class = "btn btn-primary", @style = "margin-bottom:3px;" })
 }
 <br />
 @if (Model.Days.Count > 7)
 {
-    @Html.ActionLink("Show less", "Index", "Calendar", new { start = Model.Start, daysCount = Model.Days.Count - 7 }, new { })
+    @Html.ActionLink("Show less", "Index", "Calendar", new { start = Model.Start, daysCount = Model.Days.Count - 7 }, new { @class = "btn btn-primary", @style = "margin-bottom:3px; width:96px" })
 }

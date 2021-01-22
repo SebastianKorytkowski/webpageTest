@@ -6,20 +6,20 @@
 
 <h1>Summary for day @Model.Date.ToString("yyyy/MM/dd")</h1>
 
-@Html.ActionLink("Previous day", "Day", "Home", new { Date = Model.Date.Date - TimeSpan.FromDays(1) }, new { })
+@Html.ActionLink("Previous day", "Day", "Home", new { Date = Model.Date.Date - TimeSpan.FromDays(1) }, new { @class = "btn btn-primary" })
 &emsp;
 @if (Model.Date < DateTime.Today)
 {
-    @Html.ActionLink("Next day", "Day", "Home", new { Date = Model.Date.Date + TimeSpan.FromDays(1) }, new { })
+    @Html.ActionLink("Next day", "Day", "Home", new { Date = Model.Date.Date + TimeSpan.FromDays(1) }, new { @class = "btn btn-primary" })
 }
 <br/>
 <span style="white-space: pre-line">@Model.Info</span>
 
 <div style="width: 100%;">
-    <div style="float: left; width: 50%">
+    <div style="float: left; width: 50%; margin-right:10px">
         <h2>Exercises</h2>
 
-        <table class="table">
+        <table class="table table-bordered table-striped">
             <tr>
                 <th>
                     Time
@@ -39,18 +39,18 @@
                         @Html.DisplayFor(modelItem => item.Summary)
                     </td>
                     <td>
-                        @Html.ActionLink("Edit", "Edit", "Excercises", new { id = item.Id }, new { }) |
-                        @Html.ActionLink("Delete", "Delete", "Excercises", new { id = item.Id }, new { })
+                        @Html.ActionLink("Edit", "Edit", "Excercises", new { id = item.Id }, new { @class = "btn btn-primary" }) 
+                        @Html.ActionLink("Delete", "Delete", "Excercises", new { id = item.Id }, new { @class = "btn btn-danger" })
                     </td>
                 </tr>
             }
         </table>
-        @Html.ActionLink("Create New Exercise", "Create", "Excercises", new { date = Model.Date.ToString("yyyy/MM/dd HH:mm") }, new { })
+        @Html.ActionLink("Create New Exercise", "Create", "Excercises", new { date = Model.Date.ToString("yyyy/MM/dd HH:mm") }, new { @class = "btn btn-success" })
     </div>
     <div style="float: left;">
         <h2>Meals</h2>
 
-        <table class="table">
+        <table class="table table-bordered table-striped">
             <tr>
                 <th>
                     Time
@@ -70,13 +70,13 @@
                         @Html.DisplayFor(modelItem => item.Summary)
                     </td>
                     <td>
-                        @Html.ActionLink("Edit", "Edit", "Meals", new { id = item.Id }, new { }) |
-                        @Html.ActionLink("Delete", "Delete", "Meals", new { id = item.Id }, new { })
+                        @Html.ActionLink("Edit", "Edit", "Meals", new { id = item.Id }, new { @class = "btn btn-primary"}) 
+                        @Html.ActionLink("Delete", "Delete", "Meals", new { id = item.Id }, new { @class = "btn btn-danger" })
                     </td>
                 </tr>
             }
         </table>
-        @Html.ActionLink("Create New Meal", "Create", "Meals", new { date = Model.Date.ToString("yyyy/MM/dd HH:mm") }, new { })
+        @Html.ActionLink("Create New Meal", "Create", "Meals", new { date = Model.Date.ToString("yyyy/MM/dd HH:mm") }, new { @class = "btn btn-success" })
     </div>
 </div>
 <div style="clear:both"></div>

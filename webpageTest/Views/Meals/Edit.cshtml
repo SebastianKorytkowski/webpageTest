@@ -27,8 +27,8 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
-                @Html.ActionLink("Delete", "Delete", new { id = Model.Meal.Id }, new { @class = "btn btn-default", style = "background-color: red;" })
+                <input type="submit" value="Save" class="btn btn-primary" />
+                @Html.ActionLink("Delete", "Delete", new { id = Model.Meal.Id }, new { @class = "btn btn-danger" })
             </div>
         </div>
     </div>
@@ -36,11 +36,13 @@
 
 <h4>List of ingridients: </h4>
 
-<table class="table">
+<table class="table table-bordered table-striped">
     <tr>
         <th>Ingredient name</th>
         <th>Quantity(in g)</th>
         <th>kcal</th>
+        <th></th>
+        <th></th>
     </tr>
 
     @foreach (var item in Model.MealIngredients)
@@ -64,10 +66,10 @@
                     @Html.DisplayFor(modelItem => kcal)
                 </td>
                 <td>
-                    <input type="submit" value="Save" class="btn btn-default" />
+                    <input type="submit" value="Save" class="btn btn-primary" />
                 </td>
                 <td>
-                    @Html.ActionLink("Delete", "DeleteIngredient", new { id = item.Id }, null)
+                    @Html.ActionLink("Delete", "DeleteIngredient", new { id = item.Id }, new { @class = "btn btn-danger" })
                 </td>
             </tr>
         }
@@ -75,14 +77,14 @@
 </table>
 
 <p>
-    @Html.ActionLink("Create New", "CreateIngredient", new { id = Model.Meal.Id }, null)
+    @Html.ActionLink("Create New", "CreateIngredient", new { id = Model.Meal.Id }, new { @class = "btn btn-success" })
 </p>
 
 <h4>Calories: @Model.MealIngredients.Select(i => i.Calories).Sum().ToString("0.00")</h4>
 
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
 </div>
 
 @section Scripts {
