@@ -12,7 +12,7 @@
 {
     @Html.ActionLink("Next day", "Day", "Home", new { Date = Model.Date.Date + TimeSpan.FromDays(1) }, new { @class = "btn btn-primary" })
 }
-<br/>
+<br />
 <span style="white-space: pre-line">@Model.Info</span>
 
 <div style="width: 100%;">
@@ -40,8 +40,8 @@
                             @Html.DisplayFor(modelItem => item.Summary)
                         </td>
                         <td>
-                            @Html.ActionLink("Edit", "Edit", "Excercises", new {id = item.Id}, new {@class = "btn btn-primary"})
-                            @Html.ActionLink("Delete", "Delete", "Excercises", new {id = item.Id}, new {@class = "btn btn-danger"})
+                            @Html.ActionLink("Edit", "Edit", "Excercises", new { id = item.Id }, new { @class = "btn btn-primary" })
+                            @Html.ActionLink("Delete", "Delete", "Excercises", new { id = item.Id }, new { @class = "btn btn-danger" })
                         </td>
                     </tr>
                 }
@@ -78,7 +78,7 @@
                             @Html.DisplayFor(modelItem => item.Summary)
                         </td>
                         <td>
-                            @Html.ActionLink("Edit", "Edit", "Meals", new { id = item.Id }, new { @class = "btn btn-primary"}) 
+                            @Html.ActionLink("Edit", "Edit", "Meals", new { id = item.Id }, new { @class = "btn btn-primary" })
                             @Html.ActionLink("Delete", "Delete", "Meals", new { id = item.Id }, new { @class = "btn btn-danger" })
                         </td>
                     </tr>

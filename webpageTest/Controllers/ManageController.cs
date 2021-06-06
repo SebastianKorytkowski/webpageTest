@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Drawing;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -7,48 +9,19 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using webpageTest.Models;
+using webpageTest.Models.IdentityExtension;
 
 namespace webpageTest.Controllers
 {
     [Authorize]
     public class ManageController : Controller
     {
-        private ApplicationSignInManager _signInManager;
-        private ApplicationUserManager _userManager;
+        private ApplicationDbContext db = new ApplicationDbContext();
 
-        public ManageController()
-        {
-        }
 
-        public ManageController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
-        {
-            UserManager = userManager;
-            SignInManager = signInManager;
-        }
+        public ApplicationSignInManager SignInManager => HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
 
-        public ApplicationSignInManager SignInManager
-        {
-            get
-            {
-                return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
-            }
-            private set 
-            { 
-                _signInManager = value; 
-            }
-        }
-
-        public ApplicationUserManager UserManager
-        {
-            get
-            {
-                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            }
-            private set
-            {
-                _userManager = value;
-            }
-        }
+        public ApplicationUserManager UserManager => HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
 
         //
         // GET: /Manage/Index
@@ -57,13 +30,36 @@ namespace webpageTest.Controllers
             ViewBag.StatusMessage =
                 message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
                 : message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."
+                : message == ManageMessageId.FontColorChanged ? "Your font color has been changed."
                 : message == ManageMessageId.Error ? "An error has occurred."
                 : "";
+
 
             return View();
         }
 
-       
+        // GET: Meals/Edit/5
+        public ActionResult ChangeFontColor()
+        {
+            return View(new ChangeColorViewModel { FontColor = ColorTranslator.FromHtml(User.Identity.GetFontColor()) });
+        }
+
+        // POST: Meals/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ChangeFontColor(ChangeColorViewModel changeColorViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                User.AddUpdateClaim("FontColor", ColorTranslator.ToHtml(changeColorViewModel.FontColor));
+                return RedirectToAction("Index", new { Message = ManageMessageId.FontColorChanged });
+            }
+            return View();
+        }
+
+
         //
         // GET: /Manage/ChangePassword
         public ActionResult ChangePassword()
@@ -128,16 +124,6 @@ namespace webpageTest.Controllers
         }
 
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing && _userManager != null)
-            {
-                _userManager.Dispose();
-                _userManager = null;
-            }
-
-            base.Dispose(disposing);
-        }
 
 #region Helpers
         // Used for XSRF protection when adding external logins
@@ -173,7 +159,8 @@ namespace webpageTest.Controllers
         {
             ChangePasswordSuccess,
             SetPasswordSuccess,
-            Error
+            Error,
+            FontColorChanged
         }
 
 #endregion

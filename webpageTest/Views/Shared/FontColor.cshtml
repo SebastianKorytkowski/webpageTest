@@ -1,0 +1,10 @@
+﻿@using webpageTest.Models.IdentityExtension
+
+@if (User.Identity.IsAuthenticated)
+{
+    <style>
+        body {
+            color: @User.Identity.GetFontColor() !important;
+        }
+    </style>
+}

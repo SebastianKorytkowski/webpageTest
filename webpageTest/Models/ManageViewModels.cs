@@ -1,10 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Drawing;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
 
 namespace webpageTest.Models
 {
+    public class ChangeColorViewModel
+    {
+        public Color FontColor { get; set; }
+    }
 
     public class SetPasswordViewModel
     {
